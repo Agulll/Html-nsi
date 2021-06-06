@@ -2,78 +2,96 @@
     <head>
       <title>Comment créer un labyrinthe avec un algorithme (partie 1)</title>
       <meta charset="utf-8">
+      <link rel="stylesheet" href="styles.css"/>
+      </style>
     </head>
     <body>
       <h1>Comment créer un labyrinthe avec un algorithme</h1>
-      <pre>
-        ┐┌─────┬─┐╶──┬╴
-        │├───╴┌┘╷│┌─┐└┐
-        │╵┌──┐│╶┤└┘╷└┐│
-        └─┘┌┐└┘┌┴─┐└┐└┤
-        ┌──┘│┌┐├─┐│┌┤┌┘
-        └╴┌─┤│└┘┌┘└┘│└┐
-        ┌─┘╶┤│┌╴└──┐│╷│
-        ├──┐││├─┬╴┌┘├┘│
-        └─╴│╵││╷│┌┘╷│┌┘
-        ┌─┐│┌┘└┘│└┐└┤└┐
-        │┌┴┘└──┐└┐└┐└╴│
-        │╵┌─┐┌─┘┌┴┐└─┐│
-        ├─┘░└┘╶─┴┐└┐╷││
-        │┌┐└──┬┐┌┘╷└┤││
-        └┘└───┘└┘╶┴─┘└┴
-      </pre>
+      <div class="Exemple">
+        <pre>
+┐┌─────┬─┐╶──┬╴
+│├───╴┌┘╷│┌─┐└┐
+│╵┌──┐│╶┤└┘╷└┐│
+└─┘┌┐└┘┌┴─┐└┐└┤
+┌──┘│┌┐├─┐│┌┤┌┘
+└╴┌─┤│└┘┌┘└┘│└┐
+┌─┘╶┤│┌╴└──┐│╷│
+├──┐││├─┬╴┌┘├┘│
+└─╴│╵││╷│┌┘╷│┌┘
+┌─┐│┌┘└┘│└┐└┤└┐
+│┌┴┘└──┐└┐└┐└╴│
+│╵┌─┐┌─┘┌┴┐└─┐│
+├─┘░└┘╶─┴┐└┐╷││
+│┌┐└──┬┐┌┘╷└┤││
+└┘└───┘└┘╶┴─┘└┴
+        </pre>
+      </div>
       <h2>Introduction</h2>
-      <p>
-        Il existe plusiseurs algorithmes pour consevoir des labyrinthes, mais nous utiliserons un l'algorithme basé sur le <strong>back-tracking</strong>.<br>
-        Nous allons dans un premier temps, imaginer le labyrinthe comme un espace en 2 dimentions.<br>
-        Et pour simplifier la construction du labyrinthe, nous utiliserons un quadirage avec des cases, des coodronées et des attributs a chaque case :<br>
-      </p>
-      <table border>
-        <caption><u><strong>Exemple d'une case et ses attributs</strong></u></caption>
-        <tr>
-          <th>Variable</th>
-          <th>Type</th>
-          <th>Fonction</th>
-        </tr>
-        <tr>
-          <th>x et y</th>
-          <th>Integer</th>
-          <th>Connaitre la position de la case</th>
-        </tr>
-        <tr>
-          <th>top, right, left, bottom</th>
-          <th rowspan="2" >Booléen</th>
-          <th>Conaitre les murs existant de la case</th>
-        </tr>
-        <th>Visited</th>
-        <th>Savoir si la case a déja été visitée par le "constructeur de l'labyrinthe"</th>
-      </table>
-      <p>
-        Une fois les attributs de case décidés nous pouvons créer un objet qui contient ces variables.<br>
-        Puis faire un tabeau de tableau de cases, ce qui, concètement, nous donne un plan 2D du labyrinthe.<br>
-        Nous nous intéreserons a l'affichage dans <a href="p2_main.html">une seconde partie.</a><br>
-        Les cases seront "rangées" dans une liste de liste, ce qui permetra un acces relativement simple a chaque case.<br>
-      </p>
+      <div class="Paragraphe">
+        <p>
+          Il existe plusiseurs algorithmes pour consevoir des labyrinthes, mais nous utiliserons un l'algorithme basé sur le <strong>back-tracking</strong>.
+          Nous allons dans un premier temps, imaginer le labyrinthe comme un espace en 2 dimentions.
+          Et pour simplifier la construction du labyrinthe, nous utiliserons un quadirage avec des cases, des coodronées et des attributs a chaque case :
+        </p>
+      </div>
+      <div class="Exemple">
+        <table border>
+          <caption><u><strong>Exemple d'une case et ses attributs</strong></u></caption>
+          <tr>
+            <th>Variable</th>
+            <th>Type</th>
+            <th>Fonction</th>
+          </tr>
+          <tr>
+            <th>x et y</th>
+            <th>Integer</th>
+            <th>Connaitre la position de la case</th>
+          </tr>
+          <tr>
+            <th>top, right, left, bottom</th>
+            <th rowspan="2" >Booléen</th>
+            <th>Conaitre les murs existant de la case</th>
+          </tr>
+          <th>Visited</th>
+          <th>Savoir si la case a déja été visitée par le "constructeur de l'labyrinthe"</th>
+        </table>
+      </div>
+      <div class="Paragraphe">
+        <p>
+          Une fois les attributs de case décidés nous pouvons créer un objet qui contient ces variables.<br>
+          Puis faire un tabeau de tableau de cases, ce qui, concètement, nous donne un plan 2D du labyrinthe.<br>
+          Nous nous intéreserons a l'affichage dans <a href="p2_main.html">une seconde partie.</a><br>
+          Les cases seront "rangées" dans une liste de liste, ce qui permetra un acces relativement simple a chaque case.<br>
+        </p>
+      </div>
       <h2>Constructeur</h2>
-      <p>
-        Pour crée un chemin a travers le quadiriage que l'on a définit précédament, on imagine un <i>Constructeur de labyrinthe</i><br>
-        Tout comme les cases il aura des coordonées x et y, mais cet object aura aussi une liste de cases qu'il a traversé précédament, cela nous permetra le back-tracking<br>
-        Une fois les dimentions du labyrinthe choisies et le quadirage crée le <i>constructeur</i> devra décider des cases sur lesqueles il se déplacera.<br>
-        Le <i>constructeur</i> se déplace uniquement a condition que la case soit adjacente a sa case actuel, que la case soit dans les limites du cadriage et qu'elle n'a pas encre été visitée.<br>
-        Quand il se déplace le <i>constructeur</i> modifie les variables "top, right, left, bottom" pour que le chemin se crée.<br>
-      </p>
-      <pre>
-        ┓┏━━┓
-        ┗┛╳╳┃
-        ┏━━━┛
-        ┃░┓╳╳
-        ┗━┛╳╳
-      </pre>
+      <div class="Paragraphe">
+        <p>
+          Pour crée un chemin a travers le quadiriage que l'on a définit précédament, on imagine un <i>Constructeur de labyrinthe</i><br>
+          Tout comme les cases il aura des coordonées x et y, mais cet object aura aussi une liste de cases qu'il a traversé précédament, cela nous permetra le back-tracking<br>
+          Une fois les dimentions du labyrinthe choisies et le quadirage crée le <i>constructeur</i> devra décider des cases sur lesqueles il se déplacera.<br>
+          Le <i>constructeur</i> se déplace uniquement a condition que la case soit adjacente a sa case actuel, que la case soit dans les limites du cadriage et qu'elle n'a pas encre été visitée.<br>
+          Quand il se déplace le <i>constructeur</i> modifie les variables "top, right, left, bottom" pour que le chemin se crée.<br>
+        </p>
+      </div>
+      <div class="Exemple">
+        <pre>
+┓┏━━┓
+┗┛╳╳┃
+┏━━━┛
+┃░┓╳╳
+┗━┛╳╳
+        </pre>
+      </div>
       <h2>Back tracking</h2>
-      Si l'on affiche le résulat du protocol/pseudo script précédant le résultat sera similaire a l'example si-dessus.<br>
-      Le problème est que le <i>constructeur</i> finit par se bloquer dans un coin ou une impasse.<br>
-      Entre en place le <strong>back-tracking</strong>, à chaque fois que le Constructeur se retrouve bloqué dans cette situation, il utilise la liste de ses positions précédantes pour chercher des cases inéxplorées.<br>
-      Il va donc rebrousser chemin jusqu'a inévitablement revenir a sa position de départ.<br>
-      Le labyrinthe sera donc finit ...<br>
-      Mais il reste encore a l'afficher, et nous verrons sela dans <a href="p2_main.html">la partie 2.</a><br>
+      <div class="Paragraphe">
+        <p>
+          Si l'on affiche le résulat du pseudo script précédant le résultat sera similaire a l'example si-dessus.<br>
+          Le problème est que le <i>constructeur</i> finit par se bloquer dans un coin ou une impasse.<br>
+          Entre en place le <strong>back-tracking</strong>, à chaque fois que le Constructeur se retrouve bloqué dans cette situation, il utilise la liste de ses positions précédantes pour chercher des cases inéxplorées.<br>
+          Il va donc rebrousser chemin jusqu'a inévitablement revenir a sa position de départ.<br>
+          Le labyrinthe sera donc finit ...<br>
+          Mais il reste encore a l'afficher, et nous verrons sela dans <a href="p2_main.html">la partie 2.</a><br>
+        </p>
+      </div>
     </body>
